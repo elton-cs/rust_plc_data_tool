@@ -30,9 +30,15 @@ pub struct ConnectorRecord {
     pub test_result: TestResult,
 }
 
+impl ConnectorRecord {
+    pub fn new() -> Self {
+        Self { connector: ConnectorType::NONE, test_value: 0.0, test_result: TestResult::NONE }
+    }
+}
+
 #[derive(Debug)]
 pub struct TestSet {
-    title: TestType,
-    records_set: (ConnectorRecord, ConnectorRecord, ConnectorRecord),
-    finalized_result: TestResult
+    pub title: TestType,
+    pub records_set: [ConnectorRecord; 3],
+    pub finalized_result: TestResult
 }

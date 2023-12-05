@@ -2,7 +2,11 @@ use std::fs;
 use std::io::{BufRead, BufReader, Write};
 use crate::plc_data::*;
 
-pub fn create_single_connector_record( connector: ConnectorType, test_value: f32, test_result: TestResult) -> ConnectorRecord {
+pub fn create_single_connector_record( 
+    connector: ConnectorType, 
+    test_value: f32, 
+    test_result: TestResult) -> ConnectorRecord {
+    
     let single_record = ConnectorRecord{
         connector,
         test_value,
@@ -10,6 +14,31 @@ pub fn create_single_connector_record( connector: ConnectorType, test_value: f32
     };
 
     single_record
+}
+
+pub fn create_test_set (
+    title: TestType, 
+    num_of_connectors: usize,
+    connector: Vec<ConnectorType>, 
+    test_value: Vec<f32>, 
+    test_result: Vec<TestResult>) -> TestSet {
+
+
+    let mut records_set = [ConnectorRecord::new(), ConnectorRecord::new(), ConnectorRecord::new()];
+
+    let finalized_result = test_result[3];
+    
+    for i in 0..num_of_connectors {
+        records_set[i] = create_single_connector_record(connector[i], test_value[i], test_result[i] );
+    }
+
+    let test_set = TestSet {
+        title,
+        records_set,
+        finalized_result,
+    };
+
+    test_set
 }
 
 pub fn format_data(lines: &Vec<String>) -> Vec<String> {

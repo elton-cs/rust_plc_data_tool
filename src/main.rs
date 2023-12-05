@@ -1,3 +1,5 @@
+use crate::plc_fn::create_test_set;
+
 mod plc_fn;
 mod plc_data;
 
@@ -44,14 +46,6 @@ fn main() {
 
     println!("{:#?}", unit_test_connectors);
 
-    // results of the connector test
-    let unit_test_results: Vec<plc_data::TestResult> = unit_test_struct
-        .iter()
-        .map(|value| plc_fn::get_test_result(value))
-        .collect();
-
-        println!("{:#?}", unit_test_results);
-
     //  vector of connector measured float values
     let unit_test_value_vec = plc_fn::split_connector_from_result(&test1_vec[1]);
     let unit_test_value_vec: Vec<f32> = unit_test_value_vec
@@ -61,15 +55,15 @@ fn main() {
 
     println!("{:#?}", unit_test_value_vec);
 
-    // creating a connector record:
-    let unit_connector_record = plc_fn::create_single_connector_record(
-        plc_data::ConnectorType::OJ10,
-        5.123,
-        plc_data::TestResult::PASS
-    );
+    // results of the connector test
+    let unit_test_results: Vec<plc_data::TestResult> = unit_test_struct
+    .iter()
+    .map(|value| plc_fn::get_test_result(value))
+    .collect();
 
-    println!("{:#?}", unit_connector_record);
+    println!("{:#?}", unit_test_results);
 
+    // creating a single connector record:
     let unit_connector_record = plc_fn::create_single_connector_record(
         unit_test_connectors[0],
         unit_test_value_vec[0],
@@ -77,5 +71,16 @@ fn main() {
     );
 
     println!("{:#?}", unit_connector_record);
+
+    //creating a single test set with values of all 3 connectors AND the finalzed result (PASS/FAIL)
+    let test_set_1 = create_test_set(
+        unit_test_title, 
+        3,
+        unit_test_connectors, 
+        unit_test_value_vec, 
+        unit_test_results);
+    
+    println!("{:#?}", test_set_1);
+
 
 }
