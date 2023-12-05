@@ -62,6 +62,20 @@ fn main() {
     println!("{:#?}", unit_test_value_vec);
 
     // creating a connector record:
+    let unit_connector_record = plc_fn::create_single_connector_record(
+        plc_data::ConnectorType::OJ10,
+        5.123,
+        plc_data::TestResult::PASS
+    );
 
+    println!("{:#?}", unit_connector_record);
+
+    let unit_connector_record = plc_fn::create_single_connector_record(
+        unit_test_connectors[0],
+        unit_test_value_vec[0],
+        unit_test_results[0]
+    );
+
+    println!("{:#?}", unit_connector_record);
 
 }

@@ -7,7 +7,7 @@ pub enum TestType {
     InsulationNeg,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum ConnectorType {
     NONE,
     OJ10,
@@ -16,7 +16,7 @@ pub enum ConnectorType {
     FULLTEST
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum TestResult {
     PASS,
     FAIL,
