@@ -2,6 +2,15 @@ use std::fs;
 use std::io::{BufRead, BufReader, Write};
 use crate::plc_data::*;
 
+pub fn create_single_connector_record( connector: ConnectorType, test_value: f32, test_result: TestResult) -> ConnectorRecord {
+    let single_record = ConnectorRecord{
+        connector,
+        test_value,
+        test_result,
+    };
+
+    single_record
+}
 
 pub fn format_data(lines: &Vec<String>) -> Vec<String> {
     lines.

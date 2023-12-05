@@ -23,12 +23,16 @@ pub enum TestResult {
     NONE,
 }
 
-// pub struct ConnectorRecord {
-//     connector: ConnectorType,
-//     test_value: f32,
-// }
+#[derive(Debug)]
+pub struct ConnectorRecord {
+    pub connector: ConnectorType,
+    pub test_value: f32,
+    pub test_result: TestResult,
+}
 
-// pub struct TestPack {
-//     title: TestType,
-//     results: Vec<ConnectorRecord>,
-// }
+#[derive(Debug)]
+pub struct TestSet {
+    title: TestType,
+    records_set: (ConnectorRecord, ConnectorRecord, ConnectorRecord),
+    finalized_result: TestResult
+}
