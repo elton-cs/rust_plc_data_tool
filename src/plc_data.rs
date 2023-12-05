@@ -1,4 +1,6 @@
+#[derive(Debug)]
 pub enum TestType {
+    NONE,
     GROUND,
     RESISTANCE,
     INSULATION_POS,
