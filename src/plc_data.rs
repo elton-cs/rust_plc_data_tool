@@ -20,6 +20,7 @@ pub enum ConnectorType {
 pub enum TestResult {
     PASS,
     FAIL,
+    NONE,
 }
 
 // pub struct ConnectorRecord {

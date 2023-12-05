@@ -37,4 +37,11 @@ fn main() {
         .collect();
 
     println!("{:#?}", test_connectors);
+
+    let test_results: Vec<plc_data::TestResult> = test1_struct
+        .iter()
+        .map(|value| plc_fn::get_test_result(value))
+        .collect();
+
+        println!("{:#?}", test_results);
 }

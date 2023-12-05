@@ -39,7 +39,18 @@ pub fn get_connector_type(name: &String) -> ConnectorType {
     }
 }
 
-// pub fn get_test_result(name: &)
+pub fn get_test_result(name: &String) -> TestResult {
+    let mut words = name.split_whitespace();
+    words.next();
+    let result = words.next().unwrap();
+    match result {
+        "FAIL"  => TestResult::FAIL,
+        "FAILED"  => TestResult::FAIL,
+        "PASS"  => TestResult::PASS,
+        "PASSED"  => TestResult::PASS,
+        _       => TestResult::NONE,
+    }
+}
 
 pub fn remove_odd_indices<T>(vec: Vec<T>) -> Vec<T> {
     let mut result = Vec::new();
