@@ -61,7 +61,7 @@ fn save_block_json(file_path: &str, start_string: &str, end_string: &str) -> Vec
 }
 
 
-fn save_as_json(lines: Vec<String>, file_path: &str) {
+fn save_as_json(lines: &Vec<String>, file_path: &str) {
     let json_content = lines.join("\n");
 
     let mut file = fs::File::create(file_path).expect("Failed to create file");
@@ -69,14 +69,52 @@ fn save_as_json(lines: Vec<String>, file_path: &str) {
         .expect("Failed to write to file");
 }
 
+fn format_data(lines: &Vec<String>) -> Vec<String> {
+    lines.
+    iter()
+    .map(|s| 
+        String::from(
+            s.as_str()
+            .strip_prefix("\"payload\": ")
+            .unwrap()
+            .trim_matches(',')
+            .trim_matches('\"')
+        )
+    )
+    .collect()
+}
+
+fn remove_odd_indices<T>(vec: Vec<T>) -> Vec<T> {
+    let mut result = Vec::new();
+
+    for (index, value) in vec.into_iter().enumerate() {
+        if index % 2 == 0 {
+            result.push(value);
+        }
+    }
+
+    result
+}
 
 fn main() {
 
     let file_path = "tests_export_copy.json";
     let lines = save_block_json(file_path, "\"messages\"", "]");
-    save_as_json(lines, "modified_messages.json");
+    save_as_json(&lines, "modified_messages.json");
 
     let file_path = "modified_messages.json";
     let payload = search_by_string_json(file_path, "\"payload\"");
-    save_as_json(payload, "payload.json");
+
+    // let payload = payload
+    // .iter()
+    // .map(|s| 
+    //     String::from(s.as_str().strip_prefix("\"payload\": ").unwrap())
+    // )
+    // .collect();
+
+    let payload = format_data(&payload);
+    save_as_json(&payload, "payload.json");
+
+    let payload = remove_odd_indices(payload);
+    save_as_json(&payload, "payload_nodups.json");
 }
