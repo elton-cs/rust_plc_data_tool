@@ -1,5 +1,3 @@
-use crate::{plc_fn::get_connector_type, plc_data::ConnectorType};
-
 mod plc_fn;
 mod plc_data;
 
@@ -27,13 +25,13 @@ fn main() {
 
     let test1_vec = &data[0];
     println!("{:#?}", test1_vec);
-    let test1_struct = plc_fn::get_test_type(&test1_vec[0]);
+    let test1_struct: plc_data::TestType = plc_fn::get_test_type(&test1_vec[0]);
     println!("{:#?}", test1_struct);
 
     let test1_struct = plc_fn::split_connector_from_result(&test1_vec[2]);
     println!("{:#?}", test1_struct);
 
-    let test_connectors: Vec<ConnectorType> = test1_struct
+    let test_connectors: Vec<plc_data::ConnectorType> = test1_struct
         .iter()
         .map(|value| plc_fn::get_connector_type(value))
         .collect();

@@ -16,6 +16,7 @@ pub enum ConnectorType {
     FULLTEST
 }
 
+#[derive(Debug)]
 pub enum TestResult {
     PASS,
     FAIL,

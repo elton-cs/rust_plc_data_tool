@@ -28,7 +28,7 @@ pub fn get_test_type(name: &String) -> TestType {
     }
 }
 
-pub fn get_connector_type(name: &str) -> ConnectorType {
+pub fn get_connector_type(name: &String) -> ConnectorType {
     let slice = name.split_whitespace().next().unwrap();
     match slice {
         "OJ10"  => ConnectorType::OJ10,
@@ -38,6 +38,8 @@ pub fn get_connector_type(name: &str) -> ConnectorType {
         _       => ConnectorType::NONE,
     }
 }
+
+// pub fn get_test_result(name: &)
 
 pub fn remove_odd_indices<T>(vec: Vec<T>) -> Vec<T> {
     let mut result = Vec::new();
@@ -119,15 +121,16 @@ pub fn search_by_string_json(file_path: &str, start_string: &str) -> Vec<String>
     lines
 }
 
-pub fn split_connector_from_result(name: &String) -> Vec<&str> {
+pub fn split_connector_from_result(name: &String) -> Vec<String> {
     let name = name.as_str();
 
     let connector: Vec<&str> = name.split_terminator('\\').collect();
 
-    connector.iter().map(|s| {
-        s.trim_matches('n')
-    }).collect()
+    let new_connectors: Vec<String> = connector.iter().map(|s| {
+        s.trim_matches('n').to_string()
+    }).collect();
 
+    new_connectors
 }
 
 pub fn split_data_vector(file_path: &str, lines_per_slice: u64 ) -> Vec<Vec<String>> {
