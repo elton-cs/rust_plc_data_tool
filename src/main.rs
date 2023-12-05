@@ -26,10 +26,10 @@ fn main() {
     let test1_vec = &data[0];
     println!("{:#?}", test1_vec);
     let test1_struct: plc_data::TestType = plc_fn::get_test_type(&test1_vec[0]);
-    println!("{:#?}", test1_struct);
+    // println!("{:#?}", test1_struct);
 
     let test1_struct = plc_fn::split_connector_from_result(&test1_vec[2]);
-    println!("{:#?}", test1_struct);
+    // println!("{:#?}", test1_struct);
 
     let test_connectors: Vec<plc_data::ConnectorType> = test1_struct
         .iter()
@@ -44,4 +44,14 @@ fn main() {
         .collect();
 
         println!("{:#?}", test_results);
+
+    let test1_struct = plc_fn::split_connector_from_result(&test1_vec[1]);
+    println!("{:#?}", test1_struct);
+    
+    let test_values: Vec<f32> = test1_struct
+    .iter()
+    .map(|value| plc_fn::get_test_value(value))
+    .collect();
+
+    println!("{:#?}", test_values);
 }

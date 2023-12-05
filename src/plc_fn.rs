@@ -52,6 +52,13 @@ pub fn get_test_result(name: &String) -> TestResult {
     }
 }
 
+pub fn get_test_value(name: &String) -> f32 {
+
+    let name = name.parse::<f32>().unwrap();
+
+    name
+}
+
 pub fn remove_odd_indices<T>(vec: Vec<T>) -> Vec<T> {
     let mut result = Vec::new();
 
