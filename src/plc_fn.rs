@@ -2,6 +2,43 @@ use std::fs;
 use std::io::{BufRead, BufReader, Write};
 use crate::plc_data::*;
 
+
+pub fn format_data(lines: &Vec<String>) -> Vec<String> {
+    lines.
+    iter()
+    .map(|s| 
+        String::from(
+            s.as_str()
+            .strip_prefix("\"payload\": ")
+            .unwrap()
+            .trim_matches(',')
+            .trim_matches('\"')
+        )
+    )
+    .collect()
+}
+
+pub fn get_test_type(name: &String) -> TestType {
+    match  name.as_str() {
+        "Ground Test Result:"       => TestType::Ground,
+        "Resistance Test Result:"   => TestType::Resistance,
+        "InsulationP Test Result:"  => TestType::InsulationPos,
+        "InsulationN Test Result:"  => TestType::InsulationNeg,
+        _                           => TestType::None,
+    }
+}
+
+pub fn get_connector_type(name: &str) -> ConnectorType {
+    let slice = name.split_whitespace().next().unwrap();
+    match slice {
+        "OJ10"  => ConnectorType::OJ10,
+        "OJ9"   => ConnectorType::OJ9,
+        "RTD"   => ConnectorType::RTD,
+        "TEST"  => ConnectorType::FULLTEST,
+        _       => ConnectorType::NONE,
+    }
+}
+
 pub fn remove_odd_indices<T>(vec: Vec<T>) -> Vec<T> {
     let mut result = Vec::new();
 
@@ -26,21 +63,6 @@ pub fn save_as_json(lines: &Vec<String>, file_path: &str) {
     let mut file = fs::File::create(file_path).expect("Failed to create file");
     file.write_all(json_content.as_bytes())
         .expect("Failed to write to file");
-}
-
-pub fn format_data(lines: &Vec<String>) -> Vec<String> {
-    lines.
-    iter()
-    .map(|s| 
-        String::from(
-            s.as_str()
-            .strip_prefix("\"payload\": ")
-            .unwrap()
-            .trim_matches(',')
-            .trim_matches('\"')
-        )
-    )
-    .collect()
 }
 
 pub fn save_block_json(file_path: &str, start_string: &str, end_string: &str) -> Vec<String> {
@@ -95,6 +117,17 @@ pub fn search_by_string_json(file_path: &str, start_string: &str) -> Vec<String>
     }
 
     lines
+}
+
+pub fn split_connector_from_result(name: &String) -> Vec<&str> {
+    let name = name.as_str();
+
+    let connector: Vec<&str> = name.split_terminator('\\').collect();
+
+    connector.iter().map(|s| {
+        s.trim_matches('n')
+    }).collect()
+
 }
 
 pub fn split_data_vector(file_path: &str, lines_per_slice: u64 ) -> Vec<Vec<String>> {

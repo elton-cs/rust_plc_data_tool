@@ -1,3 +1,5 @@
+use crate::{plc_fn::get_connector_type, plc_data::ConnectorType};
+
 mod plc_fn;
 mod plc_data;
 
@@ -21,6 +23,20 @@ fn main() {
 
     let file_path = "payload_nodups.json";
     let data = plc_fn::split_data_vector(file_path, 3);
-    println!("{:#?}", data);
+    // println!("{:#?}", data);
 
+    let test1_vec = &data[0];
+    println!("{:#?}", test1_vec);
+    let test1_struct = plc_fn::get_test_type(&test1_vec[0]);
+    println!("{:#?}", test1_struct);
+
+    let test1_struct = plc_fn::split_connector_from_result(&test1_vec[2]);
+    println!("{:#?}", test1_struct);
+
+    let test_connectors: Vec<ConnectorType> = test1_struct
+        .iter()
+        .map(|value| plc_fn::get_connector_type(value))
+        .collect();
+
+    println!("{:#?}", test_connectors);
 }
