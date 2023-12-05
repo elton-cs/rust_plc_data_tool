@@ -1,7 +1,5 @@
 use std::fs;
-use std::io::{BufRead, BufReader};
-use std::fs::File;
-use std::io::Write;
+use std::io::{BufRead, BufReader, Write};
 
 // fn rename_json( old_name: &str, new_name: &str){
 //     fs::rename(old_name, new_name)
@@ -66,23 +64,19 @@ fn save_block_json(file_path: &str, start_string: &str, end_string: &str) -> Vec
 fn save_as_json(lines: Vec<String>, file_path: &str) {
     let json_content = lines.join("\n");
 
-    let mut file = File::create(file_path).expect("Failed to create file");
+    let mut file = fs::File::create(file_path).expect("Failed to create file");
     file.write_all(json_content.as_bytes())
         .expect("Failed to write to file");
 }
 
 
 fn main() {
-    // rename_json("tests_export_copy", "tests_export_copy.json");
 
     let file_path = "tests_export_copy.json";
-
-    // let lines = search_by_string_json(file_path, "\"messages\"");
-    // for line in lines {
-    //     println!("{}", line);
-    // }
-
     let lines = save_block_json(file_path, "\"messages\"", "]");
-    save_as_json(lines, "modified_messages.json")
+    save_as_json(lines, "modified_messages.json");
 
+    let file_path = "modified_messages.json";
+    let payload = search_by_string_json(file_path, "\"payload\"");
+    save_as_json(payload, "payload.json");
 }
