@@ -13,8 +13,8 @@ impl TestType {
             Self::Empty => String::from("Empty"),
             Self::Ground => String::from("Ground"),
             Self::Resistance => String::from("Resistance"),
-            Self::InsulationPos => String::from("InsulationPos"),
-            Self::InsulationNeg => String::from("InsulationNeg"),
+            Self::InsulationPos => String::from("Insulation Positive"),
+            Self::InsulationNeg => String::from("Insulation Negative"),
         }
     }
 }
@@ -114,7 +114,7 @@ impl TestSet {
             let summary = each.get_summary();
             summary
         }).collect();
-        let record_set_string = format!("{}\n{}\n{}", 
+        let _record_set_string = format!("{}\n{}\n{}", 
         record_set_string[0],
         record_set_string[1],
         record_set_string[2]);
