@@ -1,6 +1,7 @@
 mod plc_fn;
 mod plc_data;
 use std::env;
+use std::io;
 
 fn main() {
 
@@ -73,5 +74,10 @@ fn main() {
     all_test_sets_vector.iter().for_each(|f| {
         f.print_test_summary();
     });
+
+    println!("Press ENTER to exit...");
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).unwrap();
+
 
 }
