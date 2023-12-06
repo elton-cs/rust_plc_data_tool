@@ -1,5 +1,5 @@
 use std::fs;
-use std::io::{BufRead, BufReader, Write};
+use std::io::{BufRead, BufReader, Write, stdin};
 use crate::plc_data::*;
 
 pub fn create_single_connector_record( 
@@ -178,28 +178,6 @@ pub fn split_connector_from_result(name: &String) -> Vec<String> {
     new_connectors
 }
 
-// pub fn split_data_vector(file_path: &str, lines_per_slice: u64 ) -> Vec<Vec<String>> {
-//     let file = fs::File::open(file_path).expect("Failed to open file");
-//     let reader = BufReader::new(file);
-
-//     let mut single_test_vec: Vec<String> = Vec::new();
-//     let mut tests_vec: Vec<Vec<String>> = Vec::new();
-//     let mut counter = 0;
-
-//     for line in reader.lines() {
-//         let line = line.expect("Failed to read line");
-//         single_test_vec.push(line);
-//         counter += 1;
-//         if counter == lines_per_slice {
-//             tests_vec.push(single_test_vec.clone());
-//             single_test_vec = Vec::new();
-//             counter = 0;
-//         }
-//     }
-
-//     tests_vec
-// }
-
 pub fn split_data_vector(original_string_vector: Vec<String>, lines_per_slice: u64 ) -> Vec<Vec<String>> {
 
     let mut single_test_vec: Vec<String> = Vec::new();
@@ -216,16 +194,11 @@ pub fn split_data_vector(original_string_vector: Vec<String>, lines_per_slice: u
         }
     };
 
-    // for line in reader.lines() {
-    //     let line = line.expect("Failed to read line");
-    //     single_test_vec.push(line);
-    //     counter += 1;
-    //     if counter == lines_per_slice {
-    //         tests_vec.push(single_test_vec.clone());
-    //         single_test_vec = Vec::new();
-    //         counter = 0;
-    //     }
-    // }
-
     tests_vec
+}
+
+pub fn just_a_pause() {
+    println!("Press ENTER to exit...");
+    let mut input = String::new();
+    stdin().read_line(&mut input).unwrap();
 }
