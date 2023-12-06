@@ -16,13 +16,13 @@ fn main() {
 
     let start_string = "\"payload\"";
     let new_vec = plc_fn::string_search_in_vector(messages, start_string);
-    println!("{:#?}", new_vec);
+    // println!("{:#?}", new_vec);
 
     let new_vec = plc_fn::format_data(&new_vec);
-    println!("{:#?}", new_vec);
+    // println!("{:#?}", new_vec);
 
     let new_vec = plc_fn::remove_odd_indices(new_vec);
-    println!("{:#?}", new_vec);
+    // println!("{:#?}", new_vec);
 
     // Working data extraction procedure:
     // let file_path = "test_data_final.json";
@@ -68,6 +68,10 @@ fn main() {
         test_set_1
     }).collect();
 
-    println!("{:#?}", all_test_sets_vector);
+    // println!("{:#?}", all_test_sets_vector);
+    // println!("{:#?}", all_test_sets_vector[0].records_set[0].get_summary());
+    all_test_sets_vector.iter().for_each(|f| {
+        f.print_test_summary();
+    });
 
 }
