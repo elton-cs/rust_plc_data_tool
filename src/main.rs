@@ -1,5 +1,3 @@
-use crate::plc_fn::create_test_set;
-
 mod plc_fn;
 mod plc_data;
 
@@ -21,66 +19,49 @@ fn main() {
     let payload = plc_fn::remove_odd_indices(payload);
     plc_fn::save_as_json(&payload, "payload_nodups.json");
 
+    
+    // Working data extraction procedure:
     let file_path = "payload_nodups.json";
-    let data = plc_fn::split_data_vector(file_path, 3);
-    // println!("{:#?}", data);
+    let big_data = plc_fn::split_data_vector(file_path, 3);
 
+    let all_test_sets_vector: Vec<plc_data::TestSet> = big_data.iter().map(|single_test_set| {
+        // here, [single_test_set] is the unmodified JSON of one test in the vector (contains 3 lines of raw data)
 
-    // unmodified JSON of unit test
-    let test1_vec = &data[0];
-    println!("{:#?}", test1_vec);
+        // title of the test set
+        let title: plc_data::TestType = plc_fn::get_test_type(&single_test_set[0]);
 
-    // title of the test
-    let unit_test_title: plc_data::TestType = plc_fn::get_test_type(&test1_vec[0]);
-    println!("{:#?}", unit_test_title);
+        // splitting the connector type from the result of each test
+        let connector_and_result = plc_fn::split_connector_from_result(&single_test_set[2]);
 
-    // splitting the connector type from the result of the test
-    let unit_test_struct = plc_fn::split_connector_from_result(&test1_vec[2]);
-    // println!("{:#?}", test1_struct);
-
-    // connector type of the test
-    let unit_test_connectors: Vec<plc_data::ConnectorType> = unit_test_struct
+        // connector type of each test
+        let connectors_vec: Vec<plc_data::ConnectorType> = connector_and_result
         .iter()
         .map(|value| plc_fn::get_connector_type(value))
         .collect();
 
-    println!("{:#?}", unit_test_connectors);
+        // measured values of each test (voltage, current, ohms etc...)
+        let value_vec = plc_fn::split_connector_from_result(&single_test_set[1]);
+        let value_vec: Vec<f32> = value_vec
+        .iter()
+        .map(|value| plc_fn::get_test_value(value))
+        .collect();
 
-    //  vector of connector measured float values
-    let unit_test_value_vec = plc_fn::split_connector_from_result(&test1_vec[1]);
-    let unit_test_value_vec: Vec<f32> = unit_test_value_vec
-    .iter()
-    .map(|value| plc_fn::get_test_value(value))
-    .collect();
+        // results of each test (PASS/FAIL)
+        let results_vec: Vec<plc_data::TestResult> = connector_and_result
+        .iter()
+        .map(|value| plc_fn::get_test_result(value))
+        .collect();
 
-    println!("{:#?}", unit_test_value_vec);
+        // creation of one test set (Ground Test, Resistance Test etc...)
+        let test_set_1 = plc_fn::create_test_set(
+            title, 
+            3,
+            connectors_vec, 
+            value_vec, 
+            results_vec);
 
-    // results of the connector test
-    let unit_test_results: Vec<plc_data::TestResult> = unit_test_struct
-    .iter()
-    .map(|value| plc_fn::get_test_result(value))
-    .collect();
+        test_set_1
+    }).collect();
 
-    println!("{:#?}", unit_test_results);
-
-    // creating a single connector record:
-    let unit_connector_record = plc_fn::create_single_connector_record(
-        unit_test_connectors[0],
-        unit_test_value_vec[0],
-        unit_test_results[0]
-    );
-
-    println!("{:#?}", unit_connector_record);
-
-    //creating a single test set with values of all 3 connectors AND the finalzed result (PASS/FAIL)
-    let test_set_1 = create_test_set(
-        unit_test_title, 
-        3,
-        unit_test_connectors, 
-        unit_test_value_vec, 
-        unit_test_results);
-    
-    println!("{:#?}", test_set_1);
-
-
+    println!("{:#?}", all_test_sets_vector);
 }
