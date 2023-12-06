@@ -8,9 +8,14 @@ fn main() {
     if args.len() < 2 {
         panic!("Please provide a file path as a command line argument");
     }
-    let file_path = &args[1];
+    let file_path = &args[1].as_str();
+    let new_file_path = format!("{}.json", file_path);
+    let new_file_path = new_file_path.as_str();
 
-    // let file_path = "tests_export_copy.json";
+    plc_fn::_rename_json(file_path, &new_file_path);
+
+
+    let file_path = new_file_path;
     let start_string = "\"messages\"";
     let end_string = "]";
     let lines = plc_fn::save_block_json(file_path, start_string, end_string);
@@ -24,11 +29,11 @@ fn main() {
     plc_fn::save_as_json(&payload, "payload.json");
 
     let payload = plc_fn::remove_odd_indices(payload);
-    plc_fn::save_as_json(&payload, "payload_nodups.json");
+    plc_fn::save_as_json(&payload, "test_data_final.json");
 
     
     // Working data extraction procedure:
-    let file_path = "payload_nodups.json";
+    let file_path = "test_data_final.json";
     let big_data = plc_fn::split_data_vector(file_path, 3);
 
     let all_test_sets_vector: Vec<plc_data::TestSet> = big_data.iter().map(|single_test_set| {
