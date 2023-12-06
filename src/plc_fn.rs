@@ -63,7 +63,7 @@ pub fn get_test_type(name: &String) -> TestType {
         "Resistance Test Result:"   => TestType::Resistance,
         "InsulationP Test Result:"  => TestType::InsulationPos,
         "InsulationN Test Result:"  => TestType::InsulationNeg,
-        _                           => TestType::None,
+        _                           => TestType::Empty,
     }
 }
 
