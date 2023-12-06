@@ -1,9 +1,16 @@
 mod plc_fn;
 mod plc_data;
+use std::env;
 
 fn main() {
 
-    let file_path = "tests_export_copy.json";
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        panic!("Please provide a file path as a command line argument");
+    }
+    let file_path = &args[1];
+
+    // let file_path = "tests_export_copy.json";
     let start_string = "\"messages\"";
     let end_string = "]";
     let lines = plc_fn::save_block_json(file_path, start_string, end_string);
