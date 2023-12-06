@@ -23,13 +23,14 @@ pub fn create_test_set (
     test_value: Vec<f32>, 
     test_result: Vec<TestResult>) -> TestSet {
 
-
     let mut records_set = [ConnectorRecord::new(), ConnectorRecord::new(), ConnectorRecord::new()];
-
     let finalized_result = test_result[3];
     
     for i in 0..num_of_connectors {
-        records_set[i] = create_single_connector_record(connector[i], test_value[i], test_result[i] );
+        records_set[i] = create_single_connector_record(
+            connector[i], 
+            test_value[i], 
+            test_result[i] );
     }
 
     let test_set = TestSet {
@@ -115,7 +116,7 @@ pub fn _rename_json( old_name: &str, new_name: &str){
 }
 
 
-pub fn save_as_json(lines: &Vec<String>, file_path: &str) {
+pub fn _save_as_json(lines: &Vec<String>, file_path: &str) {
     let json_content = lines.join("\n");
 
     let mut file = fs::File::create(file_path).expect("Failed to create file");
@@ -123,7 +124,7 @@ pub fn save_as_json(lines: &Vec<String>, file_path: &str) {
         .expect("Failed to write to file");
 }
 
-pub fn save_block_json(file_path: &str, start_string: &str, end_string: &str) -> Vec<String> {
+pub fn json_to_vector(file_path: &str, start_string: &str, end_string: &str) -> Vec<String> {
     let file = fs::File::open(file_path).expect("Failed to open file");
     let reader = BufReader::new(file);
 
@@ -153,28 +154,16 @@ pub fn save_block_json(file_path: &str, start_string: &str, end_string: &str) ->
     lines
 }
 
-pub fn search_by_string_json(file_path: &str, start_string: &str) -> Vec<String> {
-    let file = fs::File::open(file_path).expect("Failed to open file");
-    let reader = BufReader::new(file);
+pub fn string_search_in_vector(original_string_vector: Vec<String>, start_string: &str) -> Vec<String> {
 
-    let mut lines: Vec<String> = Vec::new();
-    let mut found_start_line = false;
-
-    for line in reader.lines() {
-        let line = line.expect("Failed to read line");
-        let trimmed_line = line.trim();
-        
-        if trimmed_line.starts_with(start_string) {
-            found_start_line = true;
-        }
-
-        if found_start_line {
-            lines.push(String::from(trimmed_line));
-            found_start_line = false;
+    let mut mod_string_vector: Vec<String> = Vec::new();
+    for line in original_string_vector {
+        if line.starts_with(start_string){
+            mod_string_vector.push(line);
         }
     }
+    mod_string_vector
 
-    lines
 }
 
 pub fn split_connector_from_result(name: &String) -> Vec<String> {
@@ -189,16 +178,35 @@ pub fn split_connector_from_result(name: &String) -> Vec<String> {
     new_connectors
 }
 
-pub fn split_data_vector(file_path: &str, lines_per_slice: u64 ) -> Vec<Vec<String>> {
-    let file = fs::File::open(file_path).expect("Failed to open file");
-    let reader = BufReader::new(file);
+// pub fn split_data_vector(file_path: &str, lines_per_slice: u64 ) -> Vec<Vec<String>> {
+//     let file = fs::File::open(file_path).expect("Failed to open file");
+//     let reader = BufReader::new(file);
+
+//     let mut single_test_vec: Vec<String> = Vec::new();
+//     let mut tests_vec: Vec<Vec<String>> = Vec::new();
+//     let mut counter = 0;
+
+//     for line in reader.lines() {
+//         let line = line.expect("Failed to read line");
+//         single_test_vec.push(line);
+//         counter += 1;
+//         if counter == lines_per_slice {
+//             tests_vec.push(single_test_vec.clone());
+//             single_test_vec = Vec::new();
+//             counter = 0;
+//         }
+//     }
+
+//     tests_vec
+// }
+
+pub fn split_data_vector(original_string_vector: Vec<String>, lines_per_slice: u64 ) -> Vec<Vec<String>> {
 
     let mut single_test_vec: Vec<String> = Vec::new();
     let mut tests_vec: Vec<Vec<String>> = Vec::new();
     let mut counter = 0;
 
-    for line in reader.lines() {
-        let line = line.expect("Failed to read line");
+    for line in original_string_vector {
         single_test_vec.push(line);
         counter += 1;
         if counter == lines_per_slice {
@@ -206,7 +214,18 @@ pub fn split_data_vector(file_path: &str, lines_per_slice: u64 ) -> Vec<Vec<Stri
             single_test_vec = Vec::new();
             counter = 0;
         }
-    }
+    };
+
+    // for line in reader.lines() {
+    //     let line = line.expect("Failed to read line");
+    //     single_test_vec.push(line);
+    //     counter += 1;
+    //     if counter == lines_per_slice {
+    //         tests_vec.push(single_test_vec.clone());
+    //         single_test_vec = Vec::new();
+    //         counter = 0;
+    //     }
+    // }
 
     tests_vec
 }

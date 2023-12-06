@@ -9,35 +9,28 @@ fn main() {
         panic!("Please provide a file path as a command line argument");
     }
     let file_path = &args[1].as_str();
-    let new_file_path = format!("{}.json", file_path);
-    let new_file_path = new_file_path.as_str();
 
-    plc_fn::_rename_json(file_path, &new_file_path);
-
-
-    let file_path = new_file_path;
     let start_string = "\"messages\"";
     let end_string = "]";
-    let lines = plc_fn::save_block_json(file_path, start_string, end_string);
-    plc_fn::save_as_json(&lines, "modified_messages.json");
+    let messages = plc_fn::json_to_vector(file_path, start_string, end_string);
 
-    let file_path = "modified_messages.json";
     let start_string = "\"payload\"";
-    let payload = plc_fn::search_by_string_json(file_path, start_string);
+    let new_vec = plc_fn::string_search_in_vector(messages, start_string);
+    println!("{:#?}", new_vec);
 
-    let payload = plc_fn::format_data(&payload);
-    plc_fn::save_as_json(&payload, "payload.json");
+    let new_vec = plc_fn::format_data(&new_vec);
+    println!("{:#?}", new_vec);
 
-    let payload = plc_fn::remove_odd_indices(payload);
-    plc_fn::save_as_json(&payload, "test_data_final.json");
+    let new_vec = plc_fn::remove_odd_indices(new_vec);
+    println!("{:#?}", new_vec);
 
-    
     // Working data extraction procedure:
-    let file_path = "test_data_final.json";
-    let big_data = plc_fn::split_data_vector(file_path, 3);
+    // let file_path = "test_data_final.json";
+    let big_data = plc_fn::split_data_vector(new_vec, 3);
 
     let all_test_sets_vector: Vec<plc_data::TestSet> = big_data.iter().map(|single_test_set| {
-        // here, [single_test_set] is the unmodified JSON of one test in the vector (contains 3 lines of raw data)
+        // In this map, [single_test_set] is the unmodified JSON of one test in the vector (contains 3 lines of raw data):
+
 
         // title of the test set
         let title: plc_data::TestType = plc_fn::get_test_type(&single_test_set[0]);
@@ -76,4 +69,5 @@ fn main() {
     }).collect();
 
     println!("{:#?}", all_test_sets_vector);
+
 }
